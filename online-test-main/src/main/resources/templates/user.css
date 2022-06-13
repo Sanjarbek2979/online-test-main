@@ -1,0 +1,29 @@
+.navbar-nav li:hover{
+    background-color: #080808;
+}
+.container{
+    background-color: #e9e9ea;
+    margin: 0px;
+    width: 100%;
+    padding: 20px 200px;
+
+}
+.row{
+    justify-content: space-between;
+}
+.col-md-3{
+    padding: 30px;
+    margin-right: 30px;
+    background-color: #fff;
+}
+.col-md-8{
+    padding: 20px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.data{
+    display: flex;
+    /*justify-content: space-between;*/
+}

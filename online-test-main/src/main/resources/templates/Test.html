@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="question.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .container {
+            position: relative;
+        }
+
+        .btn {
+            position: absolute;
+            bottom: -40px;
+            left: 40px;
+        }
+
+        .navbar-right {
+            position: relative;
+        }
+
+        .glyphicon-user {
+            position: absolute;
+            top: 17px;
+            left: -10px;
+            color: #e9e9ea;
+            margin-right: 9px;
+        }
+
+        #time {
+            margin-left: 30px;
+            color: #f30c0c;
+            position: absolute;
+            right: 10px;
+        }
+
+        #user {
+            display: none;
+        }
+
+        #test1 {
+            display: none;
+        }
+        .questionText{
+            font-size: 20px;
+        }
+        .questionForm{
+            border: 1px  solid #333333;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Test online</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/home">Home</a></li>
+            <!--                <ul class="dropdown-menu">-->
+            <!--                    <li><a href="#">Page 1-1</a></li>-->
+            <!--                    <li><a href="#">Page 1-2</a></li>-->
+            <!--                    <li><a href="#">Page 1-3</a></li>-->
+            <!--                </ul>-->
+            </li>
+            <li><a class="history" th:href="@{'/user/history/' + ${user.getId()}}">
+                History
+            </a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><span class="glyphicon glyphicon-user "></span></li>
+            <li class="ml-2"><a href="#"><p th:text="${user.getName()}"/></a></li>
+            <li><a href="/logOut"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container" th:object="${test}">
+    <div class="col-md-10  bg-primary">
+        <h2>Questions</h2>
+    </div>
+    <form action="/test/result" id="formId" class="form" method="post" th:object="${newtest}">
+        <div  th:each="i:${#numbers.sequence(0,test.getQuestions().size()-1/1)}" class="col-md-10 border">
+            <hr>
+
+           <div class="questionForm" >
+               <h4 class="d-flex"><strong>Question No.<span id="demo" th:text="${i+1}"/></strong></h4>
+               <p class="questionText" th:text="${test.getQuestions().get(i).getText()}"/>
+               <hr>
+               <label for="test">Enter your answer:</label>
+               <input type="text" id="test" th:field="*{objects}" class="form-control" placeholder="Enter your answer"
+                      name="name">
+
+           </div>
+
+        </div>
+        <input type="text" id="user" th:value="${test.getId()}" name="testId">
+        <input type="text" id="test1" th:value="${user.getId()}" name="userId">
+
+        <button type="submit" id="finish" class="btn btn-primary">Finish the test</button>
+
+    </form>
+    <h2 id="time" th:text="${(test.getTime()/60000)+' : 00'}"/>
+</div>
+<!--<div class="container">-->
+<!--    <h2>Large Modal</h2>-->
+<!--    &lt;!&ndash; Trigger the modal with a button &ndash;&gt;-->
+
+<!--    &lt;!&ndash; Modal &ndash;&gt;-->
+<!--    <div class="modal fade" id="myModal" role="dialog" th:object="${history}">-->
+<!--        <div class="modal-dialog modal-lg">-->
+<!--            <div class="modal-content">-->
+<!--                <div class="modal-header">-->
+<!--                    <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+<!--                    <h4 class="modal-title">Modal Header</h4>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+<!--                    <p th:text="${'Sizning natijangiz : '+history.getPoint()}"/>-->
+<!--                    -->
+<!--                </div>-->
+<!--                <div class="modal-footer">-->
+<!--                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<script>
+
+    var a;
+    var time = document.getElementById("time").innerText;
+    if(time.length==7){
+    a = document.getElementById("time").innerText.substring(0,2);
+    }
+    else {
+    a = document.getElementById("time").innerText.charAt(0);}
+    var minutes = a - 1;
+    var sec = 59;
+    var interval = setInterval(function () {
+
+        document.getElementById("time").innerHTML = minutes + " : " + sec;
+
+
+        if (sec < 10) {
+            document.getElementById("time").innerHTML = minutes + " : " + "0" + sec;
+        }
+        sec--;
+        if (sec == 0) {
+            minutes--;
+            sec = 59;
+
+            if (minutes < 0) {
+                // document.getElementById("time").innerHTML = "Your time is up";
+                // // document.getElementById("test").setAttribute(disabled);
+                // // document.getElementById("finish").click();
+                // // document.getElementsById("formId").style.opacity=0;
+                clearInterval(interval);
+                document.getElementById("time").style.opacity=0;
+                if (minutes==-1 ) {
+                    document.getElementById("finish").click();
+
+                    // document.getElementById("formId").style.opacity = 0;
+                }
+            }
+        }
+
+    }, 1000);
+    // console.log(minutes);
+    // console.log(sec);
+
+
+</script>
+
+
+</body>
+</html>

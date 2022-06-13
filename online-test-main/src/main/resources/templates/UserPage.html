@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="user.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .navbar-nav li:hover {
+            background-color: #080808;
+        }
+
+        .container {
+            background-color: #e9e9ea;
+            margin: 0px;
+            width: 100%;
+            padding: 20px 200px;
+
+        }
+
+        .row {
+            justify-content: space-between;
+        }
+
+        .col-md-12 {
+            padding: 20px;
+            margin-right: 50px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+
+        .col-md-8 {
+            padding: 20px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .data {
+            display: flex;
+            /*justify-content: space-between;*/
+        }
+
+        .navbar-right {
+            position: relative;
+        }
+
+        .glyphicon-user {
+            position: absolute;
+            top: 17px;
+            left: -10px;
+            color: #e9e9ea;
+            margin-right: 9px;
+        }
+
+        .subject {
+            text-decoration: none;
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #080808;
+        }
+
+        .test {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .history {
+            position: relative;
+        }
+
+        .btnModal {
+            background-color: #212121;
+            /*color: #e9e9ea;*/
+            border: #333333;
+            position: absolute;
+            top: 13px;
+        }
+
+        .navbar-nav li :hover {
+            background-color: #212121;
+        }
+
+
+        /*.subjectName{*/
+        /*    font-size: 24px;*/
+        /*    padding-right: 5px;*/
+        /*}*/
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Test online</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/home">Home</a></li>
+            <!--                <ul class="dropdown-menu">-->
+            <!--                    <li><a href="#">Page 1-1</a></li>-->
+            <!--                    <li><a href="#">Page 1-2</a></li>-->
+            <!--                    <li><a href="#">Page 1-3</a></li>-->
+            <!--                </ul>-->
+            </li>
+            <li><a class="history" th:href="@{'/user/history/' + ${user.getId()}}">
+                History
+            </a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><span class="glyphicon glyphicon-user "></span></li>
+            <li class="ml-2"><a href="#"><p th:text="${user.getName()}"/></a></li>
+
+            <li><a href="/logOut"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <h2>Online testlar</h2>
+       <div class="col-md-4">
+           <div class="col-md-12 ">
+               <h2><strong>Options</strong></h2>
+               <p><a href="https://olympics.com/ru/">Olympics</a></p>
+               <p><a href="https://hacks-ai.ru/">Hackaton</a></p>
+               <p><a href="#">Topic tests</a></p>
+               <p><a href="#">IELTS</a></p>
+               <p><a href="#">CEFR</a></p>
+               <p><a href="#">Competetion</a></p>
+
+           </div>
+           <div class="col-md-12">
+               <h2><strong>Mavzulashtirilgan testlar</strong></h2>
+               <div th:each="subject : ${subjects}">
+                   <a class="subject" th:href="@{'/test/subject/' + ${subject.getId()}}" th:text="${subject.getName()}"></a>
+               </div>
+           </div>
+       </div>
+
+        <div class="col-md-8 mb-3" th:each="test:${tests}">
+            <div>
+                <h2 class="data">
+                    Test nomi: <p class="subjectName" th:text="${test.getSubject().getName()}"/> №
+                    <p th:text=" ${test.getId()}"></p></h2>
+                <div class="data">
+                    <p><strong>Date:</strong><span th:text="${test.getTimestamp()}"/></p>
+                    <p ><strong>Savollar soni:</strong><span th:text="${test.getQuestions().size()}"/> ta </p>
+                    <span>/</span>
+                    <p><strong>Vaqti:</strong><span th:text="${test.getTime()/60000}"/> min</p>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-primary "><a class="test" th:href="@{'/test/' + ${test.getId()}}">Start the
+                    test</a></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
